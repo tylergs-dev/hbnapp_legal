@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delete account or data — Hushabye App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="legal.css" />
+</head>
+<body>
+  <nav class="site-nav" aria-label="Site">
+    <a class="nav-brand" href="index.html">
+      <strong>Hushabye App</strong>
+      <span>Legal</span>
+    </a>
+    <div class="nav-links">
+      <a href="support.html">Support</a>
+      <a href="delete-account.html" aria-current="page">Delete account</a>
+      <a href="tos.html">Terms of Service</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </nav>
+
+  <main class="page-wrap">
+    <article class="content-card">
+      <header class="doc-header">
+        <h1>Request account or data deletion</h1>
+        <p class="effective">Hushabye App</p>
+      </header>
+
+      <p class="lead">Use this page if you want us to delete your Hushabye app account or personal data. You can also delete your account from Settings in the app.</p>
+
+      <h2>What happens next</h2>
+      <p>Submitting the form opens your email app with a message addressed to <a href="mailto:tylerg.dev@gmail.com">tylerg.dev@gmail.com</a> and <a href="mailto:apps@hushabyenursery.org">apps@hushabyenursery.org</a>. Send that email to complete your request. We will follow up using the address you provide.</p>
+      <p>If you request account deletion, we retain the account and associated data for 30 days. During that period you may sign in again to cancel. After 30 days, the account and associated data are permanently deleted. See our <a href="privacy.html">Privacy Policy</a> for details.</p>
+
+      <h2>Send a request</h2>
+      <form class="support-form" id="delete-request-form">
+        <label class="form-field">
+          <span class="form-label">Name</span>
+          <input type="text" name="name" autocomplete="name" required />
+        </label>
+        <label class="form-field">
+          <span class="form-label">Account email</span>
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <label class="form-field">
+          <span class="form-label">What should we delete?</span>
+          <select name="request" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="Delete my account and associated data">My account and associated data</option>
+            <option value="Delete my personal data (keep the account if possible)">My personal data</option>
+            <option value="Delete my account and all personal data">My account and all personal data</option>
+          </select>
+        </label>
+        <label class="form-field">
+          <span class="form-label">Additional details (optional)</span>
+          <textarea name="details" rows="4" placeholder="Anything else we should know, such as a username or why you cannot use in-app deletion."></textarea>
+        </label>
+        <button type="submit" class="form-submit">Send via email</button>
+      </form>
+
+      <p>If the form does not open your email app, write to both addresses above with the same information.</p>
+
+      <p class="cross-link">
+        <a href="support.html">Back to support</a>
+      </p>
+    </article>
+  </main>
+  <script>
+    document.getElementById("delete-request-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      var data = new FormData(event.target);
+      var lines = [
+        "Name: " + data.get("name"),
+        "Account email: " + data.get("email"),
+        "Request: " + data.get("request"),
+        "",
+        data.get("details") || "(No additional details)"
+      ];
+      var mailto =
+        "mailto:tylerg.dev@gmail.com,apps@hushabyenursery.org" +
+        "?subject=" + encodeURIComponent("Hushabye app deletion request") +
+        "&body=" + encodeURIComponent(lines.join("\n"));
+      window.location.href = mailto;
+    });
+  </script>
+</body>
+</html>

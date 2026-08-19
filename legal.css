@@ -384,6 +384,7 @@ body {
 }
 
 .support-form input,
+.support-form select,
 .support-form textarea {
   width: 100%;
   padding: 0.65rem 0.85rem;
@@ -397,7 +398,16 @@ body {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.support-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23166534' d='M1.4.6 6 5.2 10.6.6 12 2 6 8 0 2z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2.25rem;
+}
+
 .support-form input:focus,
+.support-form select:focus,
 .support-form textarea:focus {
   outline: none;
   border-color: var(--accent);
