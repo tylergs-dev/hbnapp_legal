@@ -33,11 +33,12 @@
       <p class="lead">Use this page if you want us to delete your Hushabye app account or personal data. You can also delete your account from Settings in the app.</p>
 
       <h2>What happens next</h2>
-      <p>Submitting the form opens your email app with a message addressed to <a href="mailto:tylerg.dev@gmail.com">tylerg.dev@gmail.com</a> and <a href="mailto:apps@hushabyenursery.org">apps@hushabyenursery.org</a>. Send that email to complete your request. We will follow up using the address you provide.</p>
+      <p>Submit the form below and we will receive your request. After your account or data has been deleted, we will send a confirmation to the email address you provide.</p>
       <p>If you request account deletion, we retain the account and associated data for 30 days. During that period you may sign in again to cancel. After 30 days, the account and associated data are permanently deleted. See our <a href="privacy.html">Privacy Policy</a> for details.</p>
 
       <h2>Send a request</h2>
       <form class="support-form" id="delete-request-form">
+        <input type="text" name="_honey" class="form-honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <label class="form-field">
           <span class="form-label">Name</span>
           <input type="text" name="name" autocomplete="name" required />
@@ -59,10 +60,9 @@
           <span class="form-label">Additional details (optional)</span>
           <textarea name="details" rows="4" placeholder="Anything else we should know, such as a username or why you cannot use in-app deletion."></textarea>
         </label>
-        <button type="submit" class="form-submit">Send via email</button>
+        <button type="submit" class="form-submit">Submit request</button>
+        <p class="form-status" id="delete-request-status" role="status" aria-live="polite" hidden></p>
       </form>
-
-      <p>If the form does not open your email app, write to both addresses above with the same information.</p>
 
       <p class="cross-link">
         <a href="support.html">Back to support</a>
@@ -72,19 +72,59 @@
   <script>
     document.getElementById("delete-request-form").addEventListener("submit", function (event) {
       event.preventDefault();
-      var data = new FormData(event.target);
-      var lines = [
-        "Name: " + data.get("name"),
-        "Account email: " + data.get("email"),
-        "Request: " + data.get("request"),
-        "",
-        data.get("details") || "(No additional details)"
-      ];
-      var mailto =
-        "mailto:tylerg.dev@gmail.com,apps@hushabyenursery.org" +
-        "?subject=" + encodeURIComponent("Hushabye app deletion request") +
-        "&body=" + encodeURIComponent(lines.join("\n"));
-      window.location.href = mailto;
+      var form = event.target;
+      var data = new FormData(form);
+      var status = document.getElementById("delete-request-status");
+      var button = form.querySelector(".form-submit");
+
+      if (data.get("_honey")) {
+        return;
+      }
+
+      status.hidden = false;
+      status.className = "form-status";
+      status.textContent = "Sending your request\u2026";
+      button.disabled = true;
+
+      fetch("https://formsubmit.co/ajax/apps@hushabyenursery.org", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          _subject: "Hushabye app deletion request",
+          _template: "table",
+          _captcha: "false",
+          _cc: "tylerg.dev@gmail.com",
+          name: data.get("name"),
+          email: data.get("email"),
+          _replyto: data.get("email"),
+          request: data.get("request"),
+          details: data.get("details") || "(No additional details)"
+        })
+      })
+        .then(function (response) {
+          return response.json().then(function (payload) {
+            if (!response.ok || payload.success === "false" || payload.success === false) {
+              throw new Error(payload.message || "Request failed");
+            }
+            return payload;
+          });
+        })
+        .then(function () {
+          form.reset();
+          status.className = "form-status form-status-success";
+          status.textContent =
+            "Your request has been sent. After your account or data has been deleted, we will send a confirmation to the email address you provided.";
+        })
+        .catch(function () {
+          status.className = "form-status form-status-error";
+          status.textContent = "We could not send your request. Please try again in a moment.";
+        })
+        .finally(function () {
+          button.disabled = false;
+        });
     });
   </script>
 </body>

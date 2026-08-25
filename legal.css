@@ -444,6 +444,34 @@ body {
   transform: scale(0.98);
 }
 
+.form-submit:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+  filter: none;
+}
+
+.form-honey {
+  position: absolute;
+  left: -9999px;
+  height: 0;
+  width: 0;
+  opacity: 0;
+}
+
+.form-status {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.form-status-success {
+  color: #166534;
+}
+
+.form-status-error {
+  color: #9f1239;
+}
+
 @media (max-width: 520px) {
   .site-nav {
     flex-direction: column;
